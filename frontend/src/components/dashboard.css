@@ -1,0 +1,55 @@
+/* In dashboard.css */
+
+.dashboard-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.file-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.file-box {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-actions {
+  margin-top: 15px;
+}
+
+.file-actions button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  background-color: #3b82f6;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.file-actions button:hover {
+  background-color: #2563eb;
+}
+
+@media (max-width: 768px) {
+  .file-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .file-list {
+    grid-template-columns: 1fr;
+  }
+}

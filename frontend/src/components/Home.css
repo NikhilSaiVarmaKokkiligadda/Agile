@@ -1,0 +1,84 @@
+/* Full-screen background for the entire page */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.4
+  ); /* Dark overlay for better text visibility */
+}
+
+/* Styling for the title and description section */
+.home-text-container {
+  color: white;
+  text-align: center;
+  margin-top: 50px; /* Position title and description at the top */
+  z-index: 1; /* Ensure the text is above the background overlay */
+}
+
+/* Title styling */
+.home-title {
+  font-size: 3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+/* Description styling */
+.home-description {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+/* Styling for the main content box */
+.home-main {
+  background-color: #fff;
+  padding: 40px;
+  max-width: 500px;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  z-index: 1; /* Ensure this content stays above the background */
+}
+
+/* Button container styling */
+.home-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Button styling */
+.home-button {
+  padding: 15px 30px;
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  width: 180px;
+  margin-bottom: 10px;
+}
+
+/* Button hover effect */
+.home-button:hover {
+  background-color: #004aad;
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 110, 253, 0.2);
+}
+
+/* Button active effect */
+.home-button:active {
+  transform: scale(1);
+}

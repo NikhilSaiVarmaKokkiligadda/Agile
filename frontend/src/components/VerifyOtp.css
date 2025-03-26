@@ -1,0 +1,88 @@
+/* Background for the entire login and verify OTP pages */
+.login-container,
+.verify-otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(
+    45deg,
+    #3a8d99,
+    #0f4b5c
+  ); /* Background added back */
+}
+
+/* Adjusted form size */
+.login-form,
+.verify-otp-form {
+  background-color: #fff;
+  padding: 30px;
+  max-width: 350px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  animation: fadeInBounce 0.7s ease-in-out;
+}
+
+/* Fade-in bounce effect */
+@keyframes fadeInBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Input glow effect */
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #fafafa;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* Focus effect */
+input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 12px rgba(13, 110, 253, 0.5);
+  transform: scale(1.03);
+}
+
+/* Button styling */
+button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #0d6efd, #004aad);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+}
+
+/* Button hover effect */
+button:hover {
+  background: linear-gradient(90deg, #004aad, #3a8d99);
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 110, 253, 0.3);
+}
+
+/* Button active state */
+button:active {
+  transform: scale(1);
+}

@@ -1,0 +1,143 @@
+/* Container for the chunk page */
+.chunk-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Change to flex-start to allow space for scrolling */
+  padding: 40px 20px;
+  background: linear-gradient(
+    45deg,
+    #3a8d99,
+    #0f4b5c
+  ); /* Beautiful gradient background */
+  height: 100%; /* Allow content to grow */
+  max-height: 100vh; /* Limit to viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  box-sizing: border-box; /* Include padding in height calculation */
+}
+
+/* Heading style */
+h2 {
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: 30px;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for readability */
+}
+
+/* Style for the chunks list container */
+.chunks-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden; /* Prevent scrolling within chunks list */
+}
+
+/* Chunk box styling */
+.chunk-box {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 12px 0;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover effects for chunk boxes */
+.chunk-box:hover {
+  transform: scale(1.05);
+  background-color: #f1f1f1;
+}
+
+/* Hover effect for chunk box text */
+.chunk-box p {
+  margin: 0;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.chunk-box:hover p {
+  color: #ff5285; /* Change text color on hover */
+}
+
+/* No chunks message */
+.chunk-container p {
+  font-size: 18px;
+  color: #999;
+  text-align: center;
+}
+
+/* Responsive Design for mobile devices */
+@media (max-width: 480px) {
+  .chunk-container {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .chunk-box {
+    padding: 12px;
+  }
+
+  .chunk-box p {
+    font-size: 14px;
+  }
+}
+
+/* Additional Color Scheme & Animations */
+
+/* Background for the entire page */
+body {
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(
+    45deg,
+    #3a8d99,
+    #0f4b5c
+  ); /* Gradient for the page */
+  margin: 0;
+  padding: 0;
+  overflow: auto; /* Enable scrolling */
+}
+
+/* Glow effect for chunk boxes */
+.chunk-box:focus-within {
+  box-shadow: 0 0 10px rgba(255, 82, 133, 0.6); /* Glow effect */
+}
+
+/* Smooth fade-in effect for the entire chunk container */
+.chunk-container {
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Animated hover effect for chunks */
+.chunk-box:hover {
+  background-color: #ffe2e2;
+  box-shadow: 0 8px 16px rgba(255, 82, 133, 0.3);
+  transform: translateY(-5px);
+}
+
+/* Adding a smooth scroll for better page navigation */
+html {
+  scroll-behavior: smooth;
+  overflow-y: auto; /* Allow vertical scrolling */
+}

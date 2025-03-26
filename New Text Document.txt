@@ -1,0 +1,427 @@
+Great, Eswar! Let's resume your Agile Cloud Encryption Framework project. 🚀
+
+Current Progress Recap:
+✅ Project Overview:
+
+Users upload files → Files get chunked → Each chunk is encrypted with a different algorithm → Chunks are stored securely Secure file retrieval & decryption OTP authentication, OpenAI integration, and more ✅ Frontend Structure: (React.js)
+
+Pages Completed/Planned:
+Home ✅
+Upload Page ✅
+Login/Signup ✅
+Dashboard (File listing)
+File Details Page
+Settings Page
+File Retrieval Page
+Admin Dashboard
+✅ Backend Structure: (Node.js + Express.js + MongoDB)
+
+Features Implemented/Planned:
+User authentication (JWT + OTP) ✅
+File chunking & encryption process ✅
+MongoDB database for storing metadata ✅
+Secure file retrieval 🔄 (Needs Testing)
+AI-based file categorization (Pending)
+What’s Next?
+What do you want to work on today? Some possible tasks:
+1️⃣ Complete Dashboard & File Details Page – Show uploaded files, encryption details, and chunk locations.
+2️⃣ Secure File Sharing – Generate encrypted shareable links with expiration.
+3️⃣ Multi-cloud storage – Distribute chunks to AWS, Firebase, and Google Cloud.
+4️⃣ AI-based file categorization – Use OpenAI to detect file type & metadata.
+5️⃣ File Retrieval & Decryption – Ensure smooth decryption and chunk reassembly.
+
+Let me know what you want to tackle first! 🔥
+
+
+**********Server.js********
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const fileUpload = require("express-fileupload");
+const fs = require("fs");
+const path = require("path");
+const bcrypt = require("bcryptjs");
+const User = require("./models/User");
+
+// Load environment variables
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 5000;
+
+// ✅ Middleware
+app.use(cors());
+app.use(express.json()); // Ensure JSON body is parsed
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
+app.use(fileUpload());
+
+// ✅ Ensure upload directories exist
+const uploadDir = path.join(__dirname, "uploads");
+const cloud1Dir = path.join(uploadDir, "cloud1");
+const cloud2Dir = path.join(uploadDir, "cloud2");
+const cloud3Dir = path.join(uploadDir, "cloud3");
+
+[cloud1Dir, cloud2Dir, cloud3Dir].forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
+
+// ✅ Connect to MongoDB
+mongoose
+  .connect(process.env.DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ MongoDB connected successfully!"))
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1); // Stop the server if DB fails
+  });
+
+// ✅ User Signup Route
+app.post("/signup", async (req, res) => {
+  try {
+    const { name, email, phone, username, password } = req.body;
+
+    if (!name || !email || !phone || !username || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "All fields are required." });
+    }
+
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User already exists." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      name,
+      email,
+      phone,
+      username,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+    res
+      .status(201)
+      .json({ success: true, message: "User registered successfully!" });
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+});
+
+// ✅ Login Route
+app.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    console.log("🔍 Login Attempt:", username); // Debugging
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found!" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid password!" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful!",
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+});
+
+// ✅ Upload Route
+app.post("/upload", (req, res) => {
+  if (!req.files || !req.files.file) {
+    return res.status(400).send({ message: "No file uploaded." });
+  }
+
+  const file = req.files.file;
+  const filePath = path.join(uploadDir, file.name);
+
+  file.mv(filePath, async (err) => {
+    if (err) return res.status(500).send({ message: "Failed to upload file." });
+
+    const fileBuffer = fs.readFileSync(filePath);
+    const chunkSize = Math.ceil(fileBuffer.length / 3);
+    const chunks = [
+      fileBuffer.slice(0, chunkSize),
+      fileBuffer.slice(chunkSize, chunkSize * 2),
+      fileBuffer.slice(chunkSize * 2),
+    ];
+
+    const cloudDirs = [cloud1Dir, cloud2Dir, cloud3Dir];
+
+    const chunkPaths = chunks.map((chunk, index) => {
+      const chunkFileName = `chunk_${index + 1}_${file.name}`;
+      const cloudDir = cloudDirs[index];
+      const chunkPath = path.join(cloudDir, chunkFileName);
+
+      fs.writeFileSync(chunkPath, chunk);
+      return { chunkPath };
+    });
+
+    try {
+      const Chunk = mongoose.model(
+        "Chunk",
+        new mongoose.Schema({
+          fileName: { type: String, required: true },
+          chunks: [
+            {
+              chunkPath: { type: String, required: true },
+              chunkIndex: { type: Number, required: true },
+            },
+          ],
+          uploadDate: { type: Date, default: Date.now },
+        })
+      );
+
+      const newChunk = new Chunk({
+        fileName: file.name,
+        chunks: chunkPaths.map((chunk, index) => ({
+          chunkPath: chunk.chunkPath,
+          chunkIndex: index + 1,
+        })),
+      });
+
+      await newChunk.save();
+      res.json({
+        message: "File uploaded and processed successfully.",
+        chunks: chunkPaths.map((chunk) => chunk.chunkPath),
+      });
+    } catch (err) {
+      console.error("Error saving chunk metadata:", err);
+      res.status(500).send({ message: "Failed to save chunk metadata." });
+    }
+  });
+});
+
+// ✅ Start the Server
+app.listen(port, () => {
+  console.log(`🚀 Server is running on port ${port}`);
+});
+**********login.js*************
+import React, { useState } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
+
+const LoginPage = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // ✅ Store user details in localStorage
+        localStorage.setItem("username", result.username);
+        localStorage.setItem("email", result.email);
+        localStorage.setItem("phone", result.phone);
+
+        // ✅ Redirect to Upload Page
+        navigate("/upload");
+      } else {
+        setMessage(result.message);
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="login-container">
+        <div className="login-form">
+          <h2>Login</h2>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <button type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+          {message && <p>{message}</p>}
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default LoginPage;
+***************signup.js*********
+import React, { useState } from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
+import "./Signup.css";
+
+const SignupPage = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    username: "",
+    password: "",
+  });
+
+  const [message, setMessage] = useState(""); // Success/Error message
+  const [messageType, setMessageType] = useState(""); // "success" or "error"
+  const [loading, setLoading] = useState(false); // Loading state
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6; // Example validation (min 6 characters)
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    if (!validatePassword(formData.password)) {
+      setMessage("❌ Password must be at least 6 characters long.");
+      setMessageType("error");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setMessage("✅ User registered successfully! Redirecting to login...");
+        setMessageType("success");
+
+        // Redirect to login page after 2.5 seconds
+        setTimeout(() => {
+          navigate("/login");
+        }, 2500);
+      } else {
+        setMessage(`❌ ${result.message}`);
+        setMessageType("error");
+      }
+    } catch (error) {
+      setMessage("❌ An error occurred. Please try again.");
+      setMessageType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <Header />
+      <br />
+      <br />
+      <div className="signup-container">
+        <div className="signup-form">
+          <h2>Sign Up</h2>
+          <form onSubmit={handleSubmit}>
+            {["name", "email", "phone", "username", "password"].map((field) => (
+              <div key={field}>
+                <label htmlFor={field}>
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                <input
+                  type={field === "password" ? "password" : "text"}
+                  id={field}
+                  name={field}
+                  placeholder={`Enter your ${field}`}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            ))}
+            <button type="submit" disabled={loading}>
+              {loading ? "Signing Up..." : "Sign Up"}
+            </button>
+          </form>
+          {message && (
+            <p
+              className={
+                messageType === "success" ? "success-message" : "error-message"
+              }
+            >
+              {message}
+            </p>
+          )}
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default SignupPage;

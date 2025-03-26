@@ -1,0 +1,230 @@
+/* ManageFiles.css */
+.container {
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  background: #007bff;
+  color: white;
+}
+
+thead th {
+  padding: 12px;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+  margin-right: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover {
+  background: #218838;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: width 0.4s, height 0.4s, top 0.4s, left 0.4s;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+button:hover::after {
+  width: 0;
+  height: 0;
+}
+
+.share-button {
+  background: #17a2b8;
+}
+
+.share-button:hover {
+  background: #138496;
+}
+
+/* Add a slight bounce effect */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+button:active {
+  animation: bounce 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    padding: 10px;
+  }
+  table {
+    font-size: 14px;
+  }
+  thead th,
+  tbody td {
+    padding: 8px;
+  }
+}
+/* OTP Modal Styles */
+.otp-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.otp-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.otp-modal-content input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.button-group button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+.download-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cloud {
+  width: 50px;
+  height: 30px;
+  background: lightgray;
+  border-radius: 50%;
+  position: absolute;
+  animation: float 2s infinite ease-in-out;
+}
+
+.cloud-1 {
+  top: 0;
+  left: 20px;
+  animation-delay: 0s;
+}
+
+.cloud-2 {
+  top: 20px;
+  left: 80px;
+  animation-delay: 0.2s;
+}
+
+.cloud-3 {
+  top: 40px;
+  left: 140px;
+  animation-delay: 0.4s;
+}
+
+.combine {
+  width: 100px;
+  height: 60px;
+  background: lightgray;
+  border-radius: 50%;
+  opacity: 0;
+  animation: combine 1s ease-in-out forwards;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes combine {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
