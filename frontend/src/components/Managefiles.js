@@ -16,23 +16,7 @@ const ManageFiles = () => {
  const [file, setFileName] = useState("");
   useEffect(() => {
   
- //   openOtpModal();
- const userId = localStorage.getItem("userId");
-
- fetch(`http://localhost:5000/files/${userId}`)
- .then((res) => res.json())
- .then((data) => {
-   if (data.success) {
-     setFiles(data.files);
-   } else {
-     console.error("No files found");
-   }
-   setLoading(false);
- })
- .catch((err) => {
-   console.error("Error fetching files:", err);
-   setLoading(false);
- });
+   openOtpModal();
 
   }, []);
   const onComplete = async () => {
