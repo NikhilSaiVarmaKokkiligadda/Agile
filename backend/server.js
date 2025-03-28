@@ -14,7 +14,7 @@ const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWI
 const User = require("./models/User");
 const router = express.Router();
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 // ✅ Middleware
 app.use(cors());
