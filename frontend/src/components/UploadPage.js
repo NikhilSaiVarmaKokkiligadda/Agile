@@ -81,7 +81,7 @@ const UploadPage = () => {
     formData.append("category", selectedCategory);
 
     try {
-      const response = await fetch("http://localhost:5000/upload", {
+      const response = await fetch("https://agileservers.vercel.app/upload", {
         method: "POST",
      
         body: formData,

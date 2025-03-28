@@ -21,7 +21,7 @@ const ManageFiles = () => {
   }, []);
   const onComplete = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/decrypt/${file}`, {
+      const response = await fetch(`https://agileservers.vercel.app/decrypt/${file}`, {
         method: "POST",
       });
   
@@ -52,7 +52,7 @@ const ManageFiles = () => {
   };
   // Generate shareable link with expiration
   const handleShare = (fileId) => {
-    fetch(`http://localhost:5000/generate-share-link/${fileId}`, {
+    fetch(`https://agileservers.vercel.app/generate-share-link/${fileId}`, {
       method: "POST",
     })
       .then((res) => res.json())
@@ -92,7 +92,7 @@ const ManageFiles = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/verify-otp", {
+      const response = await fetch("https://agileservers.vercel.app/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({otp: otp ,phone: localStorage.getItem("phone")}),
@@ -111,7 +111,7 @@ const ManageFiles = () => {
           return;
         }
     
-        fetch(`http://localhost:5000/files/${userId}`)
+        fetch(`https://agileservers.vercel.app/files/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
@@ -145,7 +145,7 @@ const sendOtp = async () => {
       return;
     }
 
-    const response = await fetch("http://localhost:5000/send-otp", {
+    const response = await fetch("https://agileservers.vercel.app/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

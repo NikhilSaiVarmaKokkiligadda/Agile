@@ -202,7 +202,7 @@ app.post("/generate-share-link/:fileId", async (req, res) => {
     const { fileId } = req.params;
 
     // Generate a temporary shareable link (Modify logic as needed)
-    const shareLink = `http://localhost:5000/share/${fileId}?expires=${
+    const shareLink = `https://agileservers.vercel.app/share/${fileId}?expires=${
       Date.now() + 10 * 60 * 1000
     }`;
 

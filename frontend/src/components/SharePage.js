@@ -8,7 +8,7 @@ const SharePage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:5000/share/${fileId}`)
+    fetch(`https://agileservers.vercel.app/share/${fileId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

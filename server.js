@@ -284,7 +284,7 @@ app.post("/generate-share-link/:fileId", async (req, res) => {
     const { fileId } = req.params;
 
     // Generate a temporary shareable link (Modify logic as needed)
-    const shareLink = `http://localhost:5000/share/${fileId}?expires=${
+    const shareLink = `https://agileservers.vercel.app/share/${fileId}?expires=${
       Date.now() + 10 * 60 * 1000
     }`;
 
@@ -331,7 +331,6 @@ module.exports = router;
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`);
 });
-**************
 // Define encryption algorithm and keys (must match encryption phase)
 const ALGORITHMS = ["aes-256-cbc", "aes-192-cbc", "aes-128-cbc"];
 const KEYS = [

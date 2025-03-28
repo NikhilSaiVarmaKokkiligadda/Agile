@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
+import Header from "./Header";
 import "./Signup.css";
 
 const SignupPage = () => {
@@ -39,7 +39,7 @@ const SignupPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/signup", {
+      const response = await fetch("https://agileservers.vercel.app/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
