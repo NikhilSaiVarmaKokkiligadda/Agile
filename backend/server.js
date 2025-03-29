@@ -41,7 +41,7 @@ mongoose
   });
 
 // ✅ Ensure upload directories exist
-const uploadDir = path.join(__dirname, "uploads");
+const uploadDir = path.join("/tmp", "uploads");
 const cloud1Dir = path.join(uploadDir, "cloud1");
 const cloud2Dir = path.join(uploadDir, "cloud2");
 const cloud3Dir = path.join(uploadDir, "cloud3");
@@ -97,10 +97,15 @@ app.post("/upload", async (req, res) => {
   const file = req.files.file;
   const filePath = path.join(uploadDir, file.name);
 
-  file.mv(filePath, async (err) => {
-    if (err) return res.status(500).send({ message: "Failed to upload file." });
+  await fs.promises.writeFile(filePath, file.data);
+  console.log("✅ File uploaded to /tmp");
 
-    const fileBuffer = fs.readFileSync(filePath);
+  // ✅ Read file buffer
+  const fileBuffer = fs.readFileSync(filePath);
+  if (!fileBuffer || fileBuffer.length === 0) {
+    return res.status(500).send({ message: "File read failed or is empty." });
+  }
+ 
     const chunkSize = Math.ceil(fileBuffer.length / 3);
     const chunks = [
       fileBuffer.slice(0, chunkSize),
@@ -158,7 +163,7 @@ app.post("/upload", async (req, res) => {
       res.status(500).send({ message: "Failed to save chunk metadata." });
     }
   });
-});
+
 // ✅ Decrypt Route
 app.post("/decrypt/:fileName", async (req, res) => {
   const { fileName } = req.params;
